@@ -1,1 +1,1 @@
-Neovim set-up I've been using. Basically just [this video](https://youtu.be/xGkL2N8w0H4?si=rLDY4VP0aMy1FnFM) but with a few changes functionality and keymapping wise to make it more comfortable for me.
+Neovim set-up I've been using. I wanted something as simple as possible and ended up finding [this video](https://youtu.be/xGkL2N8w0H4?si=rLDY4VP0aMy1FnFM) and making a few changes functionality and keymapping wise to make it more comfortable for me.
