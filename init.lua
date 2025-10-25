@@ -42,9 +42,24 @@ local on_attach = function(client, bufnr)
 	vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, opts)
 end
 
-local lspconfig = require("lspconfig")
+vim.lsp.config("lua_ls", {
+	on_attach = on_attach,
+	settings = {
+		Lua = {
+			runtime = {
+				version = 'LuaJIT'
+			},
+			diagnostics = {
+				globals = {
+					'vim' -- recognize global vim var
+				}
+			},
+			workspace = { library = vim.api.nvim_get_runtime_file("", true) },
+		},
+	},
+})
 
-local servers = {
+local all_servers = {
 	"lua_ls",
 	"ts_ls",
 	"pyright",
@@ -52,27 +67,8 @@ local servers = {
 	"clangd"
 }
 
-for _, server_name in ipairs(servers) do
-	local opts = {
-		on_attach = on_attach,
-	}
-
-	if server_name == "lua_ls" then
-		opts.settings = {
-			Lua = {
-				runtime = { version = 'LuaJIT' },
-				diagnostics = {
-					-- sick n tired of vim being highlighed while i edit this file
-					globals = { 'vim' },
-				},
-				workspace = {
-					library = vim.api.nvim_get_runtime_file("", true),
-				},
-			},
-		}
-	end
-
-	lspconfig[server_name].setup(opts)
+for _, server_name in ipairs(all_servers) do
+	vim.lsp.enable(server_name)
 end
 
 vim.cmd("set completeopt+=noselect")
