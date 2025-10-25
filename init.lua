@@ -14,6 +14,8 @@ vim.keymap.set('v', '<D-x>', '"+d<Esc>')
 vim.keymap.set('n', '<D-v>', '"+P')
 vim.keymap.set('i', '<D-v>', '<Esc>"+Pa')
 vim.keymap.set('v', '<BS>', '"+d<Esc>')
+vim.keymap.set('n', '<leader>vs', ':vsp<CR>')
+vim.keymap.set('n', '<leader>hs', ':bel sp<CR>')
 
 vim.keymap.set('n', '<leader>o', ':update<CR> :source<CR>')
 vim.keymap.set('n', '<leader>w', ':write<CR>')
