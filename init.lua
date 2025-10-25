@@ -21,21 +21,60 @@ vim.keymap.set('n', '<leader>q', ':quit<CR>')
 vim.keymap.set('n', '<leader>t', ':bel sp | terminal<CR>')
 
 vim.pack.add({
-		{src = "https://github.com/vague-theme/vague.nvim"},
-		{src = "https://github.com/stevearc/oil.nvim"},
-		{src = "https://github.com/echasnovski/mini.pick"},
-		{src = "https://github.com/neovim/nvim-lspconfig" },
-		{src = "https://github.com/chomosuke/typst-preview.nvim"},
+	{ src = "https://github.com/vague-theme/vague.nvim" },
+	{ src = "https://github.com/stevearc/oil.nvim" },
+	{ src = "https://github.com/echasnovski/mini.pick" },
+	{ src = "https://github.com/neovim/nvim-lspconfig" },
+	{ src = "https://github.com/stevearc/conform.nvim" },
 })
 
-vim.api.nvim_create_autocmd('LspAttach', {
-		callback = function(ev)
-				local client = vim.lsp.get_client_by_id(ev.data.client_id)
-				if client:supports_method('textDocument/completion') then
-						vim.lsp.completion.enable(true, client.id, ev.buf, { autotrigger = true })
-				end
-		end,
-})
+local on_attach = function(client, bufnr)
+	if client:supports_method('textDocument/completion') then
+		vim.lsp.completion.enable(true, client.id, bufnr, { autotrigger = true })
+	end
+
+	local opts = { noremap = true, silent = true, buffer = bufnr }
+
+	vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
+	vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
+	vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
+	vim.keymap.set('n', '<space>ca', vim.lsp.buf.code_action, opts)
+	vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, opts)
+end
+
+local lspconfig = require("lspconfig")
+
+local servers = {
+	"lua_ls",
+	"ts_ls",
+	"pyright",
+	"rust_analyzer",
+	"clangd"
+}
+
+for _, server_name in ipairs(servers) do
+	local opts = {
+		on_attach = on_attach,
+	}
+
+	if server_name == "lua_ls" then
+		opts.settings = {
+			Lua = {
+				runtime = { version = 'LuaJIT' },
+				diagnostics = {
+					-- sick n tired of vim being highlighed while i edit this file
+					globals = { 'vim' },
+				},
+				workspace = {
+					library = vim.api.nvim_get_runtime_file("", true),
+				},
+			},
+		}
+	end
+
+	lspconfig[server_name].setup(opts)
+end
+
 vim.cmd("set completeopt+=noselect")
 
 require "mini.pick".setup()
@@ -45,7 +84,6 @@ vim.keymap.set('n', '<leader>f', ":Pick files<CR>")
 vim.keymap.set('n', '<leader>h', ":Pick help<CR>")
 vim.keymap.set('n', '<leader>e', ":Oil<CR>")
 
-vim.lsp.enable({ "lua_ls", "svelte-language-server", "tinymist" })
 vim.keymap.set('n', '<leader>lf', vim.lsp.buf.format)
 
 vim.cmd("colorscheme vague")
