@@ -19,7 +19,7 @@ vim.keymap.set('n', '<leader>hs', ':bel sp<CR>')
 
 vim.keymap.set('n', '<leader>o', ':update<CR> :source<CR>')
 vim.keymap.set('n', '<leader>w', ':write<CR>')
-vim.keymap.set('n', '<leader>q', ':quit<CR>')
+vim.keymap.set('n', '<leader>q', ':wq<CR>')
 vim.keymap.set('n', '<leader>t', ':bel sp | terminal<CR>')
 
 vim.pack.add({
@@ -59,6 +59,21 @@ vim.lsp.config("lua_ls", {
 		},
 	},
 })
+
+local servers = { 
+		"ts_ls", 
+		"pyright", 
+		"rust_analyzer",
+		"clangd", 
+		"html", 
+		"cssls" 
+}
+
+for _, server_name in ipairs(servers) do
+		vim.lsp.config(server_name, {
+				on_attach = on_attach,
+		})
+end
 
 local all_servers = {
 	"lua_ls",
