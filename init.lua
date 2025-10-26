@@ -65,7 +65,9 @@ local all_servers = {
 	"ts_ls",
 	"pyright",
 	"rust_analyzer",
-	"clangd"
+	"clangd",
+	"html",
+	"cssls"
 }
 
 for _, server_name in ipairs(all_servers) do
