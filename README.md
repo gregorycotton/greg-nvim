@@ -7,4 +7,5 @@ Will also need to install language servers... for me:
 * pyright
 * lua-language-server
 * rust-analyzer
-* clangd 
+* clangd
+* vscode-langservers-extracted
